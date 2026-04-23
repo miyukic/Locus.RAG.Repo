@@ -4,6 +4,14 @@ using System.Text;
 using System.Text.Json;
 using Npgsql;
 
+// .env があれば読み込む（gitignore 対象）
+if (File.Exists(".env"))
+    foreach (var line in File.ReadAllLines(".env"))
+        if (!line.StartsWith("#") && line.Contains('=')) {
+            var parts = line.Split('=', 2);
+            Environment.SetEnvironmentVariable(parts[0].Trim(), parts[1].Trim());
+        }
+
 var OLLAMA_ENDPOINT = Environment.GetEnvironmentVariable("LOCUS_OLLAMA_ENDPOINT")
     ?? "http://localhost:11434/api/embeddings";
 var DB_CONNECTION = Environment.GetEnvironmentVariable("LOCUS_DB_CONNECTION")
